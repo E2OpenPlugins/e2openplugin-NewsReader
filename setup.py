@@ -7,5 +7,5 @@ setup (name = 'enigma2-plugin-extensions-newsreader',
        package_dir = {pkg: 'plugin'},
        packages = [pkg],
        data_files = [('/etc', 
-           ['plugin/data/feeds.xml.default'])]
+           ['plugin/data/feeds.xml'])]
        )

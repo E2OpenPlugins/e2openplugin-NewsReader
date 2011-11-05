@@ -103,7 +103,6 @@ class FeedreaderConfig:
 	def cleanup(self):
 		if self.node:
 			self.node.unlink()
-			del self.node
 			self.node = None
 			self.feeds = []
 
