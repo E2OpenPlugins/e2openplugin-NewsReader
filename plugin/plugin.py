@@ -32,6 +32,7 @@ def Plugins(**kwargs):
 		name=myname,
 		description="Read RSS feeds",
 		where = PluginDescriptor.WHERE_PLUGINMENU,
+        icon="plugin.png",
 		fnc = main
 		)
 ###############################################################################  
