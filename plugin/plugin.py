@@ -5,6 +5,7 @@
 #
 # Added enigma(1) rssreader compatible feed.xml support
 
+from __future__ import print_function
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Screens.InputBox import InputBox
@@ -50,7 +51,7 @@ class FeedScreenList(Screen):
 		self.config = FeedreaderConfig()
 
 		self["menu"] = MenuList([])
-		self["actions"] = ActionMap(["WizardActions", "DirectionActions","MenuActions"],
+		self["actions"] = ActionMap(["WizardActions", "DirectionActions", "MenuActions"],
 			{
 			"ok": self.go,
 			"back": self.close,
@@ -69,18 +70,18 @@ class FeedScreenList(Screen):
 		if feed:
 			self.showFeed(feed)
 		else:
-			print "["+myname+"] section in config not found"
+			print("["+myname+"] section in config not found")
 
 	def showFeed(self, feed):
 		try:
 			self.session.open(FeedScreenContent, feed)
-		except IOError,e:
+		except IOError as e:
 			pass
 			#no messagebox allowed till we've opened our screen
 			#self.session.open(MessageBox,_("loading feeddata failed!\n\n%s" %e), MessageBox.TYPE_WARNING)
 		except:
 			#no messagebox allowed till we've opened our screen
-			print "no feed data"
+			print("no feed data")
 			#self.session.open(MessageBox,_("Beim Anzeigen des Feeds %s ist ein Fehler aufgetreten" % feed.getName()), MessageBox.TYPE_INFO)
 
 	def openMainMenu(self):
@@ -111,8 +112,8 @@ class FeedreaderConfig:
 		try:
 			self.node = parse(self.configfile)
 		except:
-			print "Illegal xml file"
-			print self.configfile
+			print("Illegal xml file")
+			print(self.configfile)
 			return
 		self.node = self.node.documentElement
 		self.getFeeds()
@@ -190,7 +191,7 @@ class FeedreaderConfig:
 		return True, _("Feed added")
 
 	def changeFeed(self, feedold, feednew):
-		for index in range(0,len(self.feeds)):
+		for index in range(0, len(self.feeds)):
 			if self.feeds[index].getName() == feedold.getName():
 				self.feeds[index] = feednew
 				self.writeConfig()
@@ -198,7 +199,7 @@ class FeedreaderConfig:
 		return False, _("Feed not found in config")
 	
 	def deleteFeedWithName(self, feedname):
-		for index in range(0,len(self.feeds)):
+		for index in range(0, len(self.feeds)):
 			if self.feeds[index].getName() == feedname:
 				self.feeds.pop(index)
 				self.writeConfig()
@@ -218,11 +219,11 @@ class Feed:
 		return self.description
 	def getURL(self):
 		return self.url
-	def setName(self,name):
+	def setName(self, name):
 		self.name = name
-	def setDescription(self,description):
+	def setDescription(self, description):
 		self.description = description
-	def setURL(self,url):
+	def setURL(self, url):
 		self.url = url
 	def setFavorite(self):
 		self.isfavorite = True
@@ -264,7 +265,7 @@ class FeedreaderMenuMain(Screen):
 				WizzardAddFeed(self.session, self.config)
 			elif cmd is "feed_change":
 				if self.selectedfeed:
-					WizzardAddFeed(self.session, self.config, [self.selectedfeed.getName(), self.selectedfeed.getDescription(), self.selectedfeed.getURL(),True])
+					WizzardAddFeed(self.session, self.config, [self.selectedfeed.getName(), self.selectedfeed.getDescription(), self.selectedfeed.getURL(), True])
 
 ###############################################################################  
 class WizzardAddFeed(Screen):
@@ -281,36 +282,36 @@ class WizzardAddFeed(Screen):
 			self.feedold = Feed(self.name, self.description, self.url)
 		self.session = session
 		self.config = config
-		self.session.openWithCallback(self.name_entered,InputBox, title=_("Please enter a name for the new feed"), text=self.name, maxSize=False, type=Input.TEXT)
+		self.session.openWithCallback(self.name_entered, InputBox, title=_("Please enter a name for the new feed"), text=self.name, maxSize=False, type=Input.TEXT)
 
 	def name_entered(self, feedname):
 		if feedname is None:
 			self.cancelWizzard()
 		else:
 			self.name = feedname
-			self.session.openWithCallback(self.url_entered,InputBox, title=_("Please enter a url for the new feed"), text=self.url, maxSize=False, type=Input.TEXT)
+			self.session.openWithCallback(self.url_entered, InputBox, title=_("Please enter a url for the new feed"), text=self.url, maxSize=False, type=Input.TEXT)
 
 	def url_entered(self, feedurl):
 		if feedurl is None:
 			self.cancelWizzard()
 		else:
 			self.url = feedurl
-			self.session.openWithCallback(self.description_entered,InputBox, title=_("Please enter a description for the new feed"), text=self.description, maxSize=False, type=Input.TEXT)
+			self.session.openWithCallback(self.description_entered, InputBox, title=_("Please enter a description for the new feed"), text=self.description, maxSize=False, type=Input.TEXT)
 
 	def description_entered(self, feeddescription):
 		if feeddescription is None:
 			self.cancelWizzard()
 		else:
 			self.description = feeddescription
-			feednew = Feed(self.name.rstrip(),self.description,self.url)
+			feednew = Feed(self.name.rstrip(), self.description, self.url)
 			if self.changefeed is True:
-				result,text = self.config.changeFeed(self.feedold, feednew)
+				result, text = self.config.changeFeed(self.feedold, feednew)
 				if result is False:
-					self.session.open(MessageBox,_("changing feed failed!\n\n%s" %text), MessageBox.TYPE_WARNING)
+					self.session.open(MessageBox, _("changing feed failed!\n\n%s" %text), MessageBox.TYPE_WARNING)
 			else:
-				result,text = self.config.addFeed(feednew)
+				result, text = self.config.addFeed(feednew)
 				if result is False:
-					self.session.open(MessageBox,_("adding feed failed!\n\n%s" %text), MessageBox.TYPE_WARNING)
+					self.session.open(MessageBox, _("adding feed failed!\n\n%s" %text), MessageBox.TYPE_WARNING)
 	
 	def cancelWizzard(self):
 		#self.session.open(MessageBox,_("adding was canceled"), MessageBox.TYPE_WARNING)
@@ -322,9 +323,9 @@ class WizzardDeleteFeed(Screen):
 		self.config = config
 		self.menu = menu
 		self.feedname2delete = feedname
-		self.session.openWithCallback(self.userIsSure, MessageBox,_("are you sure to delete this feed?\n\n%s" % self.feedname2delete), MessageBox.TYPE_YESNO)
+		self.session.openWithCallback(self.userIsSure, MessageBox, _("are you sure to delete this feed?\n\n%s" % self.feedname2delete), MessageBox.TYPE_YESNO)
 
-	def userIsSure(self,answer):
+	def userIsSure(self, answer):
 		if answer is None:
 			self.cancelWizzard()
 		if answer is False:
@@ -364,14 +365,14 @@ class FeedScreenContent(Screen):
 										}
 										, -1)
 	def getFeedContent(self, feed):
-		print "["+myname+"] reading feedurl '%s' ..." % (feed.getURL())
+		print("["+myname+"] reading feedurl '%s' ..." % (feed.getURL()))
 		try:
 			self.rss = RSS()
 			self.feedc = self.rss.getList(feed.getURL())
-			print "["+myname+"] have got %i items in newsfeed " % len(self.feedc)
+			print("["+myname+"] have got %i items in newsfeed " % len(self.feedc))
 			return self.feedc
 		except IOError:
-			print "["+myname+"] IOError by loading the feed! feed adress correct?"
+			print("["+myname+"] IOError by loading the feed! feed adress correct?")
 			return []
 		except:
 			#no messagebox allowed till we've opened our screen
@@ -384,14 +385,14 @@ class FeedScreenContent(Screen):
 			cmd = selection[1]
 			item = self.itemlist[cmd]
 			if item["type"].startswith("folder") is True:
-				newitem = Feed(item["title"],item["desc"],item["link"])
+				newitem = Feed(item["title"], item["desc"], item["link"])
 				self.session.open(FeedScreenContent, newitem)
 			elif item["type"].startswith("pubfeed") is True:
-				newitem = Feed(item["title"],item["desc"],item["link"])
+				newitem = Feed(item["title"], item["desc"], item["link"])
 				self.session.open(FeedScreenContent, newitem)
 			else:
 				try:
-					self.session.open(FeedScreenItemviewer,[self.feed,item])
+					self.session.open(FeedScreenItemviewer, [self.feed, item])
 				except AssertionError:
 					self.session.open(MessageBox, _("Error processing feeds"), MessageBox.TYPE_ERROR)
 
@@ -401,7 +402,7 @@ class FeedScreenItemviewer(Screen):
 	def __init__(self, session, args = 0):
 		self.feed = args[0]
 		self.item = args[1]
-		xtitle = self.item['title'].replace('"','\'')
+		xtitle = self.item['title'].replace('"', '\'')
 		self.skin = """
 				<screen position="80,80" size="e-160,e-160" title="%s" >
 					<widget name="text" position="10,10" size="e-20,e-20" font="Regular;20" />
@@ -450,29 +451,29 @@ class RSS:
 		item_data = self.get_txt( node, tagName )
 		if item_data == "":
 			return
-		print print_string % {
+		print(print_string % {
 			"tag"   : tagName,
 			"data"  : item_data
-		}
+		})
 
 	def print_rss( self, url ):
 		from urllib import urlopen
 		configproxies = FeedreaderConfig().getProxysettings()
 		if configproxies:
-			rssDocument = parse( urlopen( url ,proxies=configproxies) )
+			rssDocument = parse( urlopen( url, proxies=configproxies) )
 		else:
 			rssDocument = parse( urlopen( url ) )
 
 		for node in self.getElementsByTagName(rssDocument, 'item'):
-			print '<ul class="RSS">'
+			print('<ul class="RSS">')
 
-			print '<li><h1><a href="%s">' % self.get_txt( node, "link", "#" )
-			print self.get_txt( node, "title", "<no title>" )
-			print "</a></h1></li>"
+			print('<li><h1><a href="%s">' % self.get_txt( node, "link", "#" ))
+			print(self.get_txt( node, "title", "<no title>" ))
+			print("</a></h1></li>")
 
 			self.print_txt( node, "date",       '<li><small>%(data)s</li>' )
 			self.print_txt( node, "description",  '<li>%(data)s</li>' )
-			print "</ul>"
+			print("</ul>")
 	def getList( self, url ):
 		"""
 		returns the content of the given URL as array
@@ -480,7 +481,7 @@ class RSS:
 		from urllib import urlopen
 		configproxies = FeedreaderConfig().getProxysettings()
 		if configproxies:
-			rssDocument = parse( urlopen( url ,proxies=configproxies) )
+			rssDocument = parse( urlopen( url, proxies=configproxies) )
 		else:
 			rssDocument = parse( urlopen( url ) )
 
@@ -496,117 +497,117 @@ class RSS:
 			nodex['desc'] =  self.convertHTMLTags(self.get_txt( node, "description", "" ))
 			data.append(nodex)
 		return data
-	def convertHTMLTags(self,text_with_html):
+	def convertHTMLTags(self, text_with_html):
 		"""
 		removes all undisplayable things from text
 		"""
 		charlist = []
-		charlist.append(("&#224;","à"))
-		charlist.append(("&agrave;","à"))
-		charlist.append(("&#225;","á"))
-		charlist.append(("&aacute;","á"))
-		charlist.append(("&#226;","â"))
-		charlist.append(("&acirc;","â"))
-		charlist.append(("&#228;","ä"))
-		charlist.append(("&auml;","ä"))
+		charlist.append(("&#224;", "à"))
+		charlist.append(("&agrave;", "à"))
+		charlist.append(("&#225;", "á"))
+		charlist.append(("&aacute;", "á"))
+		charlist.append(("&#226;", "â"))
+		charlist.append(("&acirc;", "â"))
+		charlist.append(("&#228;", "ä"))
+		charlist.append(("&auml;", "ä"))
 
-		charlist.append(("&#249;","ù"))
-		charlist.append(("&ugrave;","ù"))
-		charlist.append(("&#250;","ú"))
-		charlist.append(("&uacute;","ú"))
-		charlist.append(("&#251;","û"))
-		charlist.append(("&ucirc;","û"))
-		charlist.append(("&#252;","ü"))
-		charlist.append(("&uuml;","ü"))
+		charlist.append(("&#249;", "ù"))
+		charlist.append(("&ugrave;", "ù"))
+		charlist.append(("&#250;", "ú"))
+		charlist.append(("&uacute;", "ú"))
+		charlist.append(("&#251;", "û"))
+		charlist.append(("&ucirc;", "û"))
+		charlist.append(("&#252;", "ü"))
+		charlist.append(("&uuml;", "ü"))
 
-		charlist.append(("&#242;","ò"))
-		charlist.append(("&ograve;","ò"))
-		charlist.append(("&#243;","ó"))
-		charlist.append(("&oacute;","ó"))
-		charlist.append(("&#244;","ô"))
-		charlist.append(("&ocirc;","ô"))
-		charlist.append(("&#246;","ö"))
-		charlist.append(("&ouml;","ö"))
+		charlist.append(("&#242;", "ò"))
+		charlist.append(("&ograve;", "ò"))
+		charlist.append(("&#243;", "ó"))
+		charlist.append(("&oacute;", "ó"))
+		charlist.append(("&#244;", "ô"))
+		charlist.append(("&ocirc;", "ô"))
+		charlist.append(("&#246;", "ö"))
+		charlist.append(("&ouml;", "ö"))
 
-		charlist.append(("&#236;","ì"))
-		charlist.append(("&igrave;","ì"))
-		charlist.append(("&#237;","í"))
-		charlist.append(("&iacute;","í"))
-		charlist.append(("&#238;","î"))
-		charlist.append(("&icirc;","î"))
-		charlist.append(("&#239;","ï"))
-		charlist.append(("&iuml;","ï"))
+		charlist.append(("&#236;", "ì"))
+		charlist.append(("&igrave;", "ì"))
+		charlist.append(("&#237;", "í"))
+		charlist.append(("&iacute;", "í"))
+		charlist.append(("&#238;", "î"))
+		charlist.append(("&icirc;", "î"))
+		charlist.append(("&#239;", "ï"))
+		charlist.append(("&iuml;", "ï"))
 
-		charlist.append(("&#232;","è"))
-		charlist.append(("&egrave;","è"))
-		charlist.append(("&#233;","é"))
-		charlist.append(("&eacute;","é"))
-		charlist.append(("&#234;","ê"))
-		charlist.append(("&ecirc;","ê"))
-		charlist.append(("&#235;","ë"))
-		charlist.append(("&euml;","ë"))
+		charlist.append(("&#232;", "è"))
+		charlist.append(("&egrave;", "è"))
+		charlist.append(("&#233;", "é"))
+		charlist.append(("&eacute;", "é"))
+		charlist.append(("&#234;", "ê"))
+		charlist.append(("&ecirc;", "ê"))
+		charlist.append(("&#235;", "ë"))
+		charlist.append(("&euml;", "ë"))
 
-		charlist.append(("&#192;","À"))
-		charlist.append(("&Agrave;","À"))
-		charlist.append(("&#193;","Á"))
-		charlist.append(("&Aacute;","Á"))
-		charlist.append(("&#194;","Â"))
-		charlist.append(("&Acirc;","Â"))
-		charlist.append(("&#196;","Ä"))
-		charlist.append(("&Auml;","Ä"))
+		charlist.append(("&#192;", "À"))
+		charlist.append(("&Agrave;", "À"))
+		charlist.append(("&#193;", "Á"))
+		charlist.append(("&Aacute;", "Á"))
+		charlist.append(("&#194;", "Â"))
+		charlist.append(("&Acirc;", "Â"))
+		charlist.append(("&#196;", "Ä"))
+		charlist.append(("&Auml;", "Ä"))
 
-		charlist.append(("&#217;","Ù"))
-		charlist.append(("&Ugrave;","Ù"))
-		charlist.append(("&#218;","Ú"))
-		charlist.append(("&Uacute;","Ú"))
-		charlist.append(("&#219;","Û"))
-		charlist.append(("&Ucirc;","Û"))
-		charlist.append(("&#220;","Ü"))
-		charlist.append(("&Uuml;","Ü"))
+		charlist.append(("&#217;", "Ù"))
+		charlist.append(("&Ugrave;", "Ù"))
+		charlist.append(("&#218;", "Ú"))
+		charlist.append(("&Uacute;", "Ú"))
+		charlist.append(("&#219;", "Û"))
+		charlist.append(("&Ucirc;", "Û"))
+		charlist.append(("&#220;", "Ü"))
+		charlist.append(("&Uuml;", "Ü"))
 
-		charlist.append(("&#210;","Ò"))
-		charlist.append(("&Ograve;","Ò"))
-		charlist.append(("&#211;","Ó"))
-		charlist.append(("&Oacute;","Ó"))
-		charlist.append(("&#212;","Ô"))
-		charlist.append(("&Ocirc;","Ô"))
-		charlist.append(("&#214;","Ö"))
-		charlist.append(("&Ouml;","Ö"))
+		charlist.append(("&#210;", "Ò"))
+		charlist.append(("&Ograve;", "Ò"))
+		charlist.append(("&#211;", "Ó"))
+		charlist.append(("&Oacute;", "Ó"))
+		charlist.append(("&#212;", "Ô"))
+		charlist.append(("&Ocirc;", "Ô"))
+		charlist.append(("&#214;", "Ö"))
+		charlist.append(("&Ouml;", "Ö"))
 
-		charlist.append(("&#204;","Ì"))
-		charlist.append(("&Igrave;","Ì"))
-		charlist.append(("&#205;","Í"))
-		charlist.append(("&Iacute;","Í"))
-		charlist.append(("&#206;","Î"))
-		charlist.append(("&Icirc;","Î"))
-		charlist.append(("&#207;","Ï"))
-		charlist.append(("&Iuml;","Ï"))
+		charlist.append(("&#204;", "Ì"))
+		charlist.append(("&Igrave;", "Ì"))
+		charlist.append(("&#205;", "Í"))
+		charlist.append(("&Iacute;", "Í"))
+		charlist.append(("&#206;", "Î"))
+		charlist.append(("&Icirc;", "Î"))
+		charlist.append(("&#207;", "Ï"))
+		charlist.append(("&Iuml;", "Ï"))
 
-		charlist.append(("&#223;","ß"))
-		charlist.append(("&szlig;","ß"))
-		charlist.append(("&#038;","&"))
-		charlist.append(("&#38;","&"))
-		charlist.append(("&#8230;","..."))
-		charlist.append(("&#8211;","-"))
-		charlist.append(("&#160;"," "))
-		charlist.append(("&#039;","'"))
-		charlist.append(("&#39;","'"))
+		charlist.append(("&#223;", "ß"))
+		charlist.append(("&szlig;", "ß"))
+		charlist.append(("&#038;", "&"))
+		charlist.append(("&#38;", "&"))
+		charlist.append(("&#8230;", "..."))
+		charlist.append(("&#8211;", "-"))
+		charlist.append(("&#160;", " "))
+		charlist.append(("&#039;", "'"))
+		charlist.append(("&#39;", "'"))
 	
-		charlist.append(("&lt;","<"))
-		charlist.append(("&gt;",">"))
-		charlist.append(("&nbsp;"," "))
-		charlist.append(("&amp;","&"))
-		charlist.append(("&quot;","\""))
-		charlist.append(("&apos;","'"))
-		charlist.append(("&#8216;","'"))
-		charlist.append(("&#8217;","'"))
+		charlist.append(("&lt;", "<"))
+		charlist.append(("&gt;", ">"))
+		charlist.append(("&nbsp;", " "))
+		charlist.append(("&amp;", "&"))
+		charlist.append(("&quot;", "\""))
+		charlist.append(("&apos;", "'"))
+		charlist.append(("&#8216;", "'"))
+		charlist.append(("&#8217;", "'"))
 		charlist.append(("&8221;", "”")) #right double quote or 'inch'
 		charlist.append(("&8482;", "™")) #tm
 	
 	
 		# replace the define list
 		for repl in charlist:
-			text_with_html= text_with_html.replace(repl[0],repl[1])
+			text_with_html= text_with_html.replace(repl[0], repl[1])
 	
 		# delete all <*> Tags
 		from re import sub as re_sub
