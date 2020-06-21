@@ -258,12 +258,12 @@ class FeedreaderMenuMain(Screen):
 		selection = self["menu"].getCurrent()
 		if selection is not None:
 			cmd = selection[1]
-			if cmd is "feed_delete":
+			if cmd == "feed_delete":
 				if self.selectedfeed:
 					WizzardDeleteFeed(self.session, self, self.config, self.selectedfeed.getName())
-			elif cmd is "feed_add":
+			elif cmd == "feed_add":
 				WizzardAddFeed(self.session, self.config)
-			elif cmd is "feed_change":
+			elif cmd == "feed_change":
 				if self.selectedfeed:
 					WizzardAddFeed(self.session, self.config, [self.selectedfeed.getName(), self.selectedfeed.getDescription(), self.selectedfeed.getURL(), True])
 
@@ -274,7 +274,7 @@ class WizzardAddFeed(Screen):
 	url = "http://"
 	changefeed = False
 	def __init__(self, session, config, args = 0):
-		if args is not 0:
+		if args !=  0:
 			self.name = args[0].rstrip()
 			self.description = args[1]
 			self.url = args[2]
