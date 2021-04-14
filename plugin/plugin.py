@@ -21,12 +21,16 @@ from xml.dom.minidom import parse, getDOMImplementation
 ###############################################################################  
 myname = "RSS reader"
 ###############################################################################  
+
+
 def main(session, **kwargs):
 	session.open(FeedScreenList)
+
 
 def autostart(reason, **kwargs):
 	pass
 	
+
 def Plugins(**kwargs):
 	return PluginDescriptor(
 		name=myname,
@@ -36,6 +40,8 @@ def Plugins(**kwargs):
 		)
 ###############################################################################  
 ###############################################################################  
+
+
 class FeedScreenList(Screen):
 	skin = """
 		<screen position="80,80" size="e-160,e-160" title="%s" >
@@ -93,8 +99,11 @@ class FeedScreenList(Screen):
 		self["menu"].setList(list)
 
 ############################################################################### 
+
+
 class FeedreaderConfig:
 	configfile = "/etc/feeds.xml"
+
 	def __init__(self):
 		self.node = None
 		self.feeds = []
@@ -205,27 +214,38 @@ class FeedreaderConfig:
 				break
 
 ############################################################################### 
+
+
 class Feed:
 	isfavorite = False
+
 	def __init__(self, name, description, url, isfavorite=False):
 		self.name = name
 		self.description = description
 		self.url = url
 		self.isfavorite = isfavorite
+
 	def getName(self):
 		return self.name
+
 	def getDescription(self):
 		return self.description
+
 	def getURL(self):
 		return self.url
+
 	def setName(self, name):
 		self.name = name
+
 	def setDescription(self, description):
 		self.description = description
+
 	def setURL(self, url):
 		self.url = url
+
 	def setFavorite(self):
 		self.isfavorite = True
+
 	def isFavorite(self):
 		return self.isfavorite
 	
@@ -252,6 +272,7 @@ class FeedreaderMenuMain(Screen):
 										"ok": self.go,
 										"back": self.close,
 										}, -1)
+
 	def go(self):
 		selection = self["menu"].getCurrent()
 		if selection is not None:
@@ -266,11 +287,14 @@ class FeedreaderMenuMain(Screen):
 					WizzardAddFeed(self.session, self.config, [self.selectedfeed.getName(), self.selectedfeed.getDescription(), self.selectedfeed.getURL(), True])
 
 ###############################################################################  
+
+
 class WizzardAddFeed(Screen):
 	name = ""
 	description = ""
 	url = "http://"
 	changefeed = False
+
 	def __init__(self, session, config, args=0):
 		if args is not 0:
 			self.name = args[0].rstrip()
@@ -315,6 +339,8 @@ class WizzardAddFeed(Screen):
 		#self.session.open(MessageBox,_("adding was canceled"), MessageBox.TYPE_WARNING)
 		pass
 ###############################################################################  
+
+
 class WizzardDeleteFeed(Screen):
 	def __init__(self, session, menu, config, feedname):
 		self.session = session
@@ -336,6 +362,7 @@ class WizzardDeleteFeed(Screen):
 		pass
 ###############################################################################  
 	
+
 class FeedScreenContent(Screen):
 	def __init__(self, session, args=0):
 		self.feed = args
@@ -361,6 +388,7 @@ class FeedScreenContent(Screen):
 										"ok": self.go,
 										"back": self.close,
 										}, -1)
+
 	def getFeedContent(self, feed):
 		print "[" + myname + "] reading feedurl '%s' ..." % (feed.getURL())
 		try:
@@ -394,8 +422,11 @@ class FeedScreenContent(Screen):
 					self.session.open(MessageBox, _("Error processing feeds"), MessageBox.TYPE_ERROR)
 
 ###############################################################################  
+
+
 class FeedScreenItemviewer(Screen):
 	skin = ""
+
 	def __init__(self, session, args=0):
 		self.feed = args[0]
 		self.item = args[1]
@@ -415,6 +446,8 @@ class FeedScreenItemviewer(Screen):
 									"down": self["text"].pageDown
 									}, -1)
 #############################################################################
+
+
 class RSS:
 	DEFAULT_NAMESPACES = (
 		None, # RSS 0.91, 0.92, 0.93, 0.94, 2.0
@@ -472,6 +505,7 @@ class RSS:
 			self.print_txt(node, "date", '<li><small>%(data)s</li>')
 			self.print_txt(node, "description", '<li>%(data)s</li>')
 			print "</ul>"
+
 	def getList(self, url):
 		"""
 		returns the content of the given URL as array
@@ -495,6 +529,7 @@ class RSS:
 			nodex['desc'] = self.convertHTMLTags(self.get_txt(node, "description", ""))
 			data.append(nodex)
 		return data
+
 	def convertHTMLTags(self, text_with_html):
 		"""
 		removes all undisplayable things from text
@@ -601,7 +636,6 @@ class RSS:
 		charlist.append(("&#8217;", "'"))
 		charlist.append(("&8221;", "”")) #right double quote or 'inch'
 		charlist.append(("&8482;", "™")) #tm
-	
 	
 		# replace the define list
 		for repl in charlist:
