@@ -69,7 +69,7 @@ class FeedScreenList(Screen):
 		if feed:
 			self.showFeed(feed)
 		else:
-			print "["+myname+"] section in config not found"
+			print "[" + myname + "] section in config not found"
 
 	def showFeed(self, feed):
 		try:
@@ -305,11 +305,11 @@ class WizzardAddFeed(Screen):
 			if self.changefeed is True:
 				result,text = self.config.changeFeed(self.feedold, feednew)
 				if result is False:
-					self.session.open(MessageBox,_("changing feed failed!\n\n%s" %text), MessageBox.TYPE_WARNING)
+					self.session.open(MessageBox,_("changing feed failed!\n\n%s" % text), MessageBox.TYPE_WARNING)
 			else:
 				result,text = self.config.addFeed(feednew)
 				if result is False:
-					self.session.open(MessageBox,_("adding feed failed!\n\n%s" %text), MessageBox.TYPE_WARNING)
+					self.session.open(MessageBox,_("adding feed failed!\n\n%s" % text), MessageBox.TYPE_WARNING)
 	
 	def cancelWizzard(self):
 		#self.session.open(MessageBox,_("adding was canceled"), MessageBox.TYPE_WARNING)
@@ -347,7 +347,7 @@ class FeedScreenContent(Screen):
 		Screen.__init__(self, session)
 	
 		list = []
-		self.itemlist=[]
+		self.itemlist = []
 		itemnr = 0
 		for item in self.getFeedContent(self.feed):
 			list.append((item["title"], itemnr))
@@ -362,14 +362,14 @@ class FeedScreenContent(Screen):
 										"back": self.close,
 										}										, -1)
 	def getFeedContent(self, feed):
-		print "["+myname+"] reading feedurl '%s' ..." % (feed.getURL())
+		print "[" + myname + "] reading feedurl '%s' ..." % (feed.getURL())
 		try:
 			self.rss = RSS()
 			self.feedc = self.rss.getList(feed.getURL())
-			print "["+myname+"] have got %i items in newsfeed " % len(self.feedc)
+			print "[" + myname + "] have got %i items in newsfeed " % len(self.feedc)
 			return self.feedc
 		except IOError:
-			print "["+myname+"] IOError by loading the feed! feed adress correct?"
+			print "[" + myname + "] IOError by loading the feed! feed adress correct?"
 			return []
 		except:
 			#no messagebox allowed till we've opened our screen
@@ -406,7 +406,7 @@ class FeedScreenItemviewer(Screen):
 				</screen>""" % self.feed.getName()
 		Screen.__init__(self, session)
 
-		self["text"] = ScrollLabel(self.item['title']+"\n\n"+ self.item['desc']+"\n\n"+ self.item['date']+"\n"+self.item['link'])
+		self["text"] = ScrollLabel(self.item['title'] + "\n\n" + self.item['desc'] + "\n\n" + self.item['date'] + "\n" + self.item['link'])
 		self["actions"] = ActionMap(["WizardActions"],
 									{
 									"ok": self.close,
@@ -469,8 +469,8 @@ class RSS:
 			print self.get_txt(node, "title", "<no title>")
 			print "</a></h1></li>"
 
-			self.print_txt(node, "date",       '<li><small>%(data)s</li>')
-			self.print_txt(node, "description",  '<li>%(data)s</li>')
+			self.print_txt(node, "date", '<li><small>%(data)s</li>')
+			self.print_txt(node, "description", '<li>%(data)s</li>')
 			print "</ul>"
 	def getList(self, url):
 		"""
@@ -484,15 +484,15 @@ class RSS:
 			rssDocument = parse(urlopen(url))
 
 		channelname = self.get_txt(rssDocument, "title", "no channelname")
-		data =[]
+		data = []
 		for node in self.getElementsByTagName(rssDocument, 'item'):
-			nodex={}
-			nodex['channel'] =  channelname
-			nodex['type'] =  self.get_txt(node, "type", "feed")
-			nodex['link'] =  self.get_txt(node, "link", "")
+			nodex = {}
+			nodex['channel'] = channelname
+			nodex['type'] = self.get_txt(node, "type", "feed")
+			nodex['link'] = self.get_txt(node, "link", "")
 			nodex['title'] = self.convertHTMLTags(self.get_txt(node, "title", "<no title>"))
-			nodex['date'] =  self.get_txt(node, "pubDate", self.get_txt(node, "date", ""))
-			nodex['desc'] =  self.convertHTMLTags(self.get_txt(node, "description", ""))
+			nodex['date'] = self.get_txt(node, "pubDate", self.get_txt(node, "date", ""))
+			nodex['desc'] = self.convertHTMLTags(self.get_txt(node, "description", ""))
 			data.append(nodex)
 		return data
 	def convertHTMLTags(self,text_with_html):
@@ -605,7 +605,7 @@ class RSS:
 	
 		# replace the define list
 		for repl in charlist:
-			text_with_html= text_with_html.replace(repl[0],repl[1])
+			text_with_html = text_with_html.replace(repl[0],repl[1])
 	
 		# delete all <*> Tags
 		from re import sub as re_sub
