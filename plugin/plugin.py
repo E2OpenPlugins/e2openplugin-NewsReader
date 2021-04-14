@@ -251,8 +251,7 @@ class FeedreaderMenuMain(Screen):
 										{
 										"ok": self.go,
 										"back": self.close,
-										}
-										, -1)
+										}										, -1)
 	def go(self):
 		selection = self["menu"].getCurrent()
 		if selection is not None:
@@ -361,8 +360,7 @@ class FeedScreenContent(Screen):
 										{
 										"ok": self.go,
 										"back": self.close,
-										}
-										, -1)
+										}										, -1)
 	def getFeedContent(self, feed):
 		print "["+myname+"] reading feedurl '%s' ..." % (feed.getURL())
 		try:
@@ -425,76 +423,76 @@ class RSS:
 	)
 	DUBLIN_CORE = ('http://purl.org/dc/elements/1.1/',)
 
-	def getElementsByTagName( self, node, tagName, possibleNamespaces=DEFAULT_NAMESPACES ):
+	def getElementsByTagName(self, node, tagName, possibleNamespaces=DEFAULT_NAMESPACES):
 		for namespace in possibleNamespaces:
 			children = node.getElementsByTagNameNS(namespace, tagName)
 			if len(children):
 				return children
 		return []
 
-	def node_data( self, node, tagName, possibleNamespaces=DEFAULT_NAMESPACES):
+	def node_data(self, node, tagName, possibleNamespaces=DEFAULT_NAMESPACES):
 		children = self.getElementsByTagName(node, tagName, possibleNamespaces)
 		node = len(children) and children[0] or None
 		return node and "".join([child.data.encode("utf-8") for child in node.childNodes]) or None
 
-	def get_txt( self, node, tagName, default_txt="" ):
+	def get_txt(self, node, tagName, default_txt=""):
 		"""
 		Liefert den Inhalt >tagName< des >node< zurueck, ist dieser nicht
 		vorhanden, wird >default_txt< zurueck gegeben.
 		"""
-		return self.node_data( node, tagName ) or self.node_data( node, tagName, self.DUBLIN_CORE ) or default_txt
+		return self.node_data(node, tagName) or self.node_data(node, tagName, self.DUBLIN_CORE) or default_txt
 
-	def print_txt( self, node, tagName, print_string ):
+	def print_txt(self, node, tagName, print_string):
 		"""
 		Formatierte Ausgabe
 		"""
-		item_data = self.get_txt( node, tagName )
+		item_data = self.get_txt(node, tagName)
 		if item_data == "":
 			return
 		print print_string % {
-			"tag"   : tagName,
-			"data"  : item_data
+			"tag": tagName,
+			"data": item_data
 		}
 
-	def print_rss( self, url ):
+	def print_rss(self, url):
 		from urllib import urlopen
 		configproxies = FeedreaderConfig().getProxysettings()
 		if configproxies:
-			rssDocument = parse( urlopen( url ,proxies=configproxies) )
+			rssDocument = parse(urlopen(url,proxies=configproxies))
 		else:
-			rssDocument = parse( urlopen( url ) )
+			rssDocument = parse(urlopen(url))
 
 		for node in self.getElementsByTagName(rssDocument, 'item'):
 			print '<ul class="RSS">'
 
-			print '<li><h1><a href="%s">' % self.get_txt( node, "link", "#" )
-			print self.get_txt( node, "title", "<no title>" )
+			print '<li><h1><a href="%s">' % self.get_txt(node, "link", "#")
+			print self.get_txt(node, "title", "<no title>")
 			print "</a></h1></li>"
 
-			self.print_txt( node, "date",       '<li><small>%(data)s</li>' )
-			self.print_txt( node, "description",  '<li>%(data)s</li>' )
+			self.print_txt(node, "date",       '<li><small>%(data)s</li>')
+			self.print_txt(node, "description",  '<li>%(data)s</li>')
 			print "</ul>"
-	def getList( self, url ):
+	def getList(self, url):
 		"""
 		returns the content of the given URL as array
 		"""
 		from urllib import urlopen
 		configproxies = FeedreaderConfig().getProxysettings()
 		if configproxies:
-			rssDocument = parse( urlopen( url ,proxies=configproxies) )
+			rssDocument = parse(urlopen(url,proxies=configproxies))
 		else:
-			rssDocument = parse( urlopen( url ) )
+			rssDocument = parse(urlopen(url))
 
-		channelname = self.get_txt( rssDocument, "title", "no channelname" )
+		channelname = self.get_txt(rssDocument, "title", "no channelname")
 		data =[]
 		for node in self.getElementsByTagName(rssDocument, 'item'):
 			nodex={}
 			nodex['channel'] =  channelname
-			nodex['type'] =  self.get_txt( node, "type", "feed" )
-			nodex['link'] =  self.get_txt( node, "link", "" )
-			nodex['title'] = self.convertHTMLTags(self.get_txt( node, "title", "<no title>" ))
-			nodex['date'] =  self.get_txt( node, "pubDate", self.get_txt( node, "date", "" ) )
-			nodex['desc'] =  self.convertHTMLTags(self.get_txt( node, "description", "" ))
+			nodex['type'] =  self.get_txt(node, "type", "feed")
+			nodex['link'] =  self.get_txt(node, "link", "")
+			nodex['title'] = self.convertHTMLTags(self.get_txt(node, "title", "<no title>"))
+			nodex['date'] =  self.get_txt(node, "pubDate", self.get_txt(node, "date", ""))
+			nodex['desc'] =  self.convertHTMLTags(self.get_txt(node, "description", ""))
 			data.append(nodex)
 		return data
 	def convertHTMLTags(self,text_with_html):
