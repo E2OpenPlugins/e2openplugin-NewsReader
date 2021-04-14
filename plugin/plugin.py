@@ -18,9 +18,9 @@ from Plugins.Plugin import PluginDescriptor
 
 from xml.dom.minidom import parse, getDOMImplementation
 
-###############################################################################  
+###############################################################################
 myname = "RSS reader"
-###############################################################################  
+###############################################################################
 
 
 def main(session, **kwargs):
@@ -29,7 +29,7 @@ def main(session, **kwargs):
 
 def autostart(reason, **kwargs):
 	pass
-	
+
 
 def Plugins(**kwargs):
 	return PluginDescriptor(
@@ -38,8 +38,8 @@ def Plugins(**kwargs):
 		where=PluginDescriptor.WHERE_PLUGINMENU,
 		fnc=main
 		)
-###############################################################################  
-###############################################################################  
+###############################################################################
+###############################################################################
 
 
 class FeedScreenList(Screen):
@@ -98,7 +98,7 @@ class FeedScreenList(Screen):
 			list.append((feed.getName(), feed))
 		self["menu"].setList(list)
 
-############################################################################### 
+###############################################################################
 
 
 class FeedreaderConfig:
@@ -205,7 +205,7 @@ class FeedreaderConfig:
 				self.writeConfig()
 				return True, _("Feed updated")
 		return False, _("Feed not found in config")
-	
+
 	def deleteFeedWithName(self, feedname):
 		for index in range(0, len(self.feeds)):
 			if self.feeds[index].getName() == feedname:
@@ -213,7 +213,7 @@ class FeedreaderConfig:
 				self.writeConfig()
 				break
 
-############################################################################### 
+###############################################################################
 
 
 class Feed:
@@ -248,9 +248,9 @@ class Feed:
 
 	def isFavorite(self):
 		return self.isfavorite
-	
-	
-############################################################################### 
+
+
+###############################################################################
 class FeedreaderMenuMain(Screen):
 	def __init__(self, session, config, selectedfeed):
 		self.config = config
@@ -286,7 +286,7 @@ class FeedreaderMenuMain(Screen):
 				if self.selectedfeed:
 					WizzardAddFeed(self.session, self.config, [self.selectedfeed.getName(), self.selectedfeed.getDescription(), self.selectedfeed.getURL(), True])
 
-###############################################################################  
+###############################################################################
 
 
 class WizzardAddFeed(Screen):
@@ -334,11 +334,11 @@ class WizzardAddFeed(Screen):
 				result, text = self.config.addFeed(feednew)
 				if result is False:
 					self.session.open(MessageBox, _("adding feed failed!\n\n%s" % text), MessageBox.TYPE_WARNING)
-	
+
 	def cancelWizzard(self):
 		#self.session.open(MessageBox,_("adding was canceled"), MessageBox.TYPE_WARNING)
 		pass
-###############################################################################  
+###############################################################################
 
 
 class WizzardDeleteFeed(Screen):
@@ -357,11 +357,11 @@ class WizzardDeleteFeed(Screen):
 		else:
 			self.config.deleteFeedWithName(self.feedname2delete)
 			self.menu.close()
-	
+
 	def cancelWizzard(self):
 		pass
-###############################################################################  
-	
+###############################################################################
+
 
 class FeedScreenContent(Screen):
 	def __init__(self, session, args=0):
@@ -372,7 +372,7 @@ class FeedScreenContent(Screen):
 				</screen>""" % (self.feed.getName())
 		self.session = session
 		Screen.__init__(self, session)
-	
+
 		list = []
 		self.itemlist = []
 		itemnr = 0
@@ -421,7 +421,7 @@ class FeedScreenContent(Screen):
 				except AssertionError:
 					self.session.open(MessageBox, _("Error processing feeds"), MessageBox.TYPE_ERROR)
 
-###############################################################################  
+###############################################################################
 
 
 class FeedScreenItemviewer(Screen):
@@ -625,7 +625,7 @@ class RSS:
 		charlist.append(("&#160;", " "))
 		charlist.append(("&#039;", "'"))
 		charlist.append(("&#39;", "'"))
-	
+
 		charlist.append(("&lt;", "<"))
 		charlist.append(("&gt;", ">"))
 		charlist.append(("&nbsp;", " "))
@@ -636,11 +636,11 @@ class RSS:
 		charlist.append(("&#8217;", "'"))
 		charlist.append(("&8221;", "”")) #right double quote or 'inch'
 		charlist.append(("&8482;", "™")) #tm
-	
+
 		# replace the define list
 		for repl in charlist:
 			text_with_html = text_with_html.replace(repl[0], repl[1])
-	
+
 		# delete all <*> Tags
 		from re import sub as re_sub
 		text_with_html = re_sub(r'<(.*?)>(?uism)', '', text_with_html)
