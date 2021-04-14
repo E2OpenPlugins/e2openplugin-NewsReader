@@ -428,7 +428,8 @@ class RSS:
 	def getElementsByTagName( self, node, tagName, possibleNamespaces=DEFAULT_NAMESPACES ):
 		for namespace in possibleNamespaces:
 			children = node.getElementsByTagNameNS(namespace, tagName)
-			if len(children): return children
+			if len(children):
+				return children
 		return []
 
 	def node_data( self, node, tagName, possibleNamespaces=DEFAULT_NAMESPACES):
