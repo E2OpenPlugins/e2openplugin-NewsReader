@@ -31,8 +31,8 @@ def Plugins(**kwargs):
 	return PluginDescriptor(
 		name=myname,
 		description="Read RSS feeds",
-		where = PluginDescriptor.WHERE_PLUGINMENU,
-		fnc = main
+		where=PluginDescriptor.WHERE_PLUGINMENU,
+		fnc=main
 		)
 ###############################################################################  
 ###############################################################################  
@@ -42,7 +42,7 @@ class FeedScreenList(Screen):
 			<widget name="menu" position="10,10" size="e-20,e-20" scrollbarMode="showOnDemand" />
 		</screen>""" % myname
 
-	def __init__(self, session, args = 0):
+	def __init__(self, session, args=0):
 		self.skin = FeedScreenList.skin
 		self.session = session
 		Screen.__init__(self, session)
@@ -207,7 +207,7 @@ class FeedreaderConfig:
 ############################################################################### 
 class Feed:
 	isfavorite = False
-	def __init__(self,name,description,url, isfavorite = False):
+	def __init__(self,name,description,url, isfavorite=False):
 		self.name = name
 		self.description = description
 		self.url = url
@@ -272,7 +272,7 @@ class WizzardAddFeed(Screen):
 	description = ""
 	url = "http://"
 	changefeed = False
-	def __init__(self, session, config, args = 0):
+	def __init__(self, session, config, args=0):
 		if args is not 0:
 			self.name = args[0].rstrip()
 			self.description = args[1]
@@ -338,7 +338,7 @@ class WizzardDeleteFeed(Screen):
 ###############################################################################  
 	
 class FeedScreenContent(Screen):
-	def __init__(self, session, args = 0):
+	def __init__(self, session, args=0):
 		self.feed = args
 		self.skin = """
 				<screen position="80,80" size="e-160,e-160" title="%s" >
@@ -398,7 +398,7 @@ class FeedScreenContent(Screen):
 ###############################################################################  
 class FeedScreenItemviewer(Screen):
 	skin = ""
-	def __init__(self, session, args = 0):
+	def __init__(self, session, args=0):
 		self.feed = args[0]
 		self.item = args[1]
 		xtitle = self.item['title'].replace('"','\'')
