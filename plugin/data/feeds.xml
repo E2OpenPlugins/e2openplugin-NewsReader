@@ -10,6 +10,10 @@
 		<url>http://rss.cnn.com/rss/edition_europe.rss</url>
 	</feed>
 	<feed>
+		<name>[DE] Tagesschau.de</name>
+		<url>http://www.tagesschau.de/infoservices/alle-meldungen-100~rdf.xml</url>
+	</feed>
+	<feed>
 		<name>[DE] SAT: Digitalfernsehen</name>
 		<url>http://www.digitalfernsehen.de/rss/rss.xml</url>
 	</feed>
