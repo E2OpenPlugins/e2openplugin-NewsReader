@@ -7,7 +7,7 @@ setup(name='enigma2-plugin-extensions-newsreader',
        description='NewsReader for reading RSS-feeds',
        packages=[pkg],
        package_dir={pkg: 'plugin'},
-       package_data={pkg: ['*.png', '*.xml', 'locale/*/LC_MESSAGES/*.mo']},
+       package_data={pkg: ['*.png', 'locale/*/LC_MESSAGES/*.mo']},
        data_files=[('/etc', ['plugin/data/feeds.xml'])]
        cmdclass=setup_translate.cmdclass,  # for translation
       )
