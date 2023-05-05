@@ -16,12 +16,12 @@ from xml.dom.minidom import parse, getDOMImplementation
 # ENIGMA IMPORTS
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
-from Screens.InputBox import InputBox
 from Components.ActionMap import ActionMap
 from Components.ScrollLabel import ScrollLabel
 from Components.MenuList import MenuList
 from Components.Input import Input
 from Plugins.Plugin import PluginDescriptor
+from Screens.VirtualKeyBoard import VirtualKeyBoard
 
 # for localized messages
 from . import _
@@ -283,7 +283,7 @@ class WizzardAddFeed(Screen):
 	url = "http://"
 	changefeed = False
 
-	def __init__(self, session, config, args=[0, 0, 0, 0]):
+	def __init__(self, session, config, args=["", "", "", ""]):
 		if args != 0:
 			self.name = args[0].rstrip()
 			self.description = args[1]
@@ -292,21 +292,21 @@ class WizzardAddFeed(Screen):
 			self.feedold = Feed(self.name, self.description, self.url)
 		self.session = session
 		self.config = config
-		self.session.openWithCallback(self.name_entered, InputBox, title=_("Please enter a name for the new feed"), text=self.name, maxSize=False, type=Input.TEXT)
+		self.session.openWithCallback(self.name_entered, VirtualKeyBoard, title=_("Please enter a name for the new feed"), text=self.name, maxSize=False, type=Input.TEXT)
 
 	def name_entered(self, feedname):
 		if feedname is None:
 			self.cancelWizzard()
 		else:
 			self.name = feedname
-			self.session.openWithCallback(self.url_entered, InputBox, title=_("Please enter a url for the new feed"), text=self.url, maxSize=False, type=Input.TEXT)
+			self.session.openWithCallback(self.url_entered, VirtualKeyBoard, title=_("Please enter a url for the new feed"), text=self.url, maxSize=False, type=Input.TEXT)
 
 	def url_entered(self, feedurl):
 		if feedurl is None:
 			self.cancelWizzard()
 		else:
 			self.url = feedurl
-			self.session.openWithCallback(self.description_entered, InputBox, title=_("Please enter a description for the new feed"), text=self.description, maxSize=False, type=Input.TEXT)
+			self.session.openWithCallback(self.description_entered, VirtualKeyBoard, title=_("Please enter a description for the new feed"), text=self.description, maxSize=False, type=Input.TEXT)
 
 	def description_entered(self, feeddescription):
 		if feeddescription is None:
